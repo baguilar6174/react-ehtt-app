@@ -6,11 +6,11 @@ We want to know your ability to create a modern and functional single page appli
 
 ## Take in consideration
 
-* Any Javascript libraries and/or frameworks are at your disposal.
-* Only for the latest browsers.
-* Use Typescript and ES6.
-* We encourage you to use SCSS.
-* Bonus points:
+- Any Javascript libraries and/or frameworks are at your disposal.
+- Only for the latest browsers.
+- Use Typescript and ES6.
+- We encourage you to use SCSS.
+- Bonus points:
   - Code quality
   - Mobile support
   - Application structure
@@ -24,10 +24,10 @@ We present to you the **"Employee's Hapinness Tracking Tool"** or **EHTT**, to s
 
 Each person will have the following properties:
 
-* Name
-* Category (employee or manager)
-* Company name
-* Happiness level
+- Name
+- Category (employee or manager)
+- Company name
+- Happiness level
 
 You want you to list the people and allow searching through them by their name or category. The results should also includes the logo of their company and the posibility to be sorted by happiness level, category or company in an ascending or descending order.
 
@@ -44,8 +44,6 @@ You need to create a JSON file with the information and an "images" folder with 
 ## Delivery requirements
 
 You can use any startegy you prefer for storing the favorites list and persistence is not required. The solution must run properly and a text file with any instruction required for running it should be provided.
-
-## Delivery extra
 
 # Solution
 
@@ -81,10 +79,11 @@ yarn dev
 
 - React
 - Typescript
+- TailwindCSS
 
 ### What I learned
 
-- 
+-
 
 ## Stay in touch
 

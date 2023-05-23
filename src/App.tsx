@@ -1,8 +1,8 @@
-import './App.css';
+import './App.scss';
 
 function App(): JSX.Element {
 	return (
-		<div>
+		<div className="py-5">
 			<h1>Hello world</h1>
 		</div>
 	);
