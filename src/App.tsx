@@ -4,9 +4,9 @@ import { SECOND, TWO, ZERO } from './utils/constants';
 import { parseTimeInMillis } from './utils/utils';
 
 export type ActivityBaseInternalContainer = {
-	interval: NodeJS.Timeout;
+	interval: ReturnType<typeof setTimeout>;
 	timer: number;
-	throttle: null | NodeJS.Timeout;
+	throttle: null | ReturnType<typeof setTimeout>;
 };
 
 function App(): JSX.Element {
