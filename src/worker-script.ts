@@ -1,10 +1,12 @@
 const workercode = (): void => {
+	const sessionDuration = 180000;
+
 	let timerInterval: number | undefined;
-	let time = 180000;
+	let time = sessionDuration;
 	self.onmessage = function ({ data: { turn } }): void {
 		if (turn === 'off' || timerInterval) {
 			clearInterval(timerInterval);
-			time = 0;
+			time = sessionDuration;
 		}
 		if (turn === 'on') {
 			timerInterval = setInterval((): void => {
