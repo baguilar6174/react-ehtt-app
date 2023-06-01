@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.scss';
 import { SECOND, TWO, ZERO } from './utils/constants';
 import { parseTimeInMillis } from './utils/utils';
+import worker from './worker-script';
 
 export type ActivityBaseInternalContainer = {
 	interval: ReturnType<typeof setTimeout>;
 	timer: number;
 	throttle: null | ReturnType<typeof setTimeout>;
 };
+
+const timerWorker = new Worker(worker);
 
 function App(): JSX.Element {
 	const sessionDuration = parseTimeInMillis('3m');
@@ -59,8 +62,7 @@ function App(): JSX.Element {
 
 				refActivity.current.timer -= Number(SECOND);
 
-				// eslint-disable-next-line no-console
-				console.log(refActivity.current.timer / Number(SECOND));
+				// console.log(refActivity.current.timer / Number(SECOND));
 			}, Number(SECOND))
 		};
 		return cleanupEventsWhenUnmounting;
@@ -75,7 +77,26 @@ function App(): JSX.Element {
 		return () => events.forEach((event) => window.removeEventListener(event, handleActivityReset));
 	}, [handleActivityReset, hasToShowExtendSessionModal]);
 
-	return (
+	const [webWorkerTime, setWebWorkerTime] = useState<number>(ZERO);
+
+	useEffect(() => {
+		timerWorker.onmessage = ({ data }): void => {
+			const { time } = data;
+			console.log(time / Number(SECOND));
+			setWebWorkerTime(time);
+		};
+	}, []);
+
+	const startWebWorkerTimer = (): void => {
+		timerWorker.postMessage({ turn: 'on' });
+	};
+
+	const resetWebWorkerTimer = (): void => {
+		timerWorker.postMessage({ turn: 'off' });
+		setWebWorkerTime(0);
+	};
+
+	/* return (
 		<div className="py-5">
 			<h1>Hello world</h1>
 			{hasToShowExtendSessionModal && (
@@ -84,6 +105,27 @@ function App(): JSX.Element {
 				</div>
 			)}
 			{grace && grace <= 1 && <h5 className="mt-5">Su sesión expiró</h5>}
+		</div>
+	); */
+	return (
+		<div>
+			<button
+				className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+				onClick={(): void => {
+					startWebWorkerTimer();
+				}}
+			>
+				Start Timers
+			</button>
+			<button
+				className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
+				onClick={(): void => {
+					resetWebWorkerTimer();
+				}}
+			>
+				Reset Timers
+			</button>
+			<div className="p-5">Time: {webWorkerTime / Number(SECOND)}s</div>
 		</div>
 	);
 
