@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { timers } from '../utils/timers';
+import { timers } from '../utils';
 
 type ChannelsType = {
 	[key: string]: any;

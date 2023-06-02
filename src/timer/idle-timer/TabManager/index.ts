@@ -3,8 +3,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { BroadcastChannel, Polyfill } from './BroadcastChannel';
 import { LeaderElector } from './LeaderElector';
-import { createToken } from '../utils/token';
-import { MessageActionType } from '../types/MessageActionType';
+import { createToken } from '../utils';
+import { MessageActionType } from '../types';
 
 interface ITabManagerOptions {
 	channelName: string;

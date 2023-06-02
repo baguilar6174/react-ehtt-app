@@ -7,11 +7,10 @@ export {
 	IdleTimerConsumer,
 	useIdleTimerContext
 } from './IdleTimerContext';
-export { createMocks, workerTimers } from './utils/timers';
-export { DEFAULT_EVENTS } from './utils/defaults';
-export { type IIdleTimer } from './types/IIdleTimer';
-export { type IIdleTimerProps } from './types/IIdleTimerProps';
-export { type ITimers } from './types/ITimers';
-export { type EventsType } from './types/EventsType';
-export { type PresenceType } from './types/PresenceType';
-export { type MessageType } from './types/MessageType';
+export { createMocks, workerTimers, DEFAULT_EVENTS } from './utils';
+export { type IIdleTimer } from './types';
+export { type IIdleTimerProps } from './types';
+export { type ITimers } from './types';
+export { type EventsType } from './types';
+export { type PresenceType } from './types';
+export { type MessageType } from './types';

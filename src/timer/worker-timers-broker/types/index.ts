@@ -1,8 +1,3 @@
-export interface IClearResponse {
-	error: null;
-	id: number;
-}
-
 export type TTimerType = 'interval' | 'timeout';
 
 export interface ICallNotification {
@@ -12,6 +7,11 @@ export interface ICallNotification {
 		timerId: number;
 		timerType: TTimerType;
 	};
+}
+
+export interface IClearResponse {
+	error: null;
+	id: number;
 }
 
 export interface IErrorNotification {
@@ -32,6 +32,26 @@ export interface IErrorResponse {
 
 export type TWorkerMessage = ICallNotification | IClearResponse | IErrorNotification | IErrorResponse;
 
-export const isClearResponse = (message: TWorkerMessage): message is IClearResponse => {
-	return (<IClearResponse>message).error === null && typeof message.id === 'number';
-};
+export interface IClearRequest {
+	id: number;
+	method: 'clear';
+	params: {
+		timerId: number;
+		timerType: TTimerType;
+	};
+}
+
+export interface ISetNotification {
+	id: null;
+	method: 'set';
+	params: {
+		delay: number;
+		now: number;
+		timerId: number;
+		timerType: TTimerType;
+	};
+}
+
+export interface IWorkerEvent extends Event {
+	data: TWorkerMessage;
+}

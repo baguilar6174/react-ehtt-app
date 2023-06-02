@@ -5,21 +5,27 @@ import { useEffect, useRef, useCallback, useMemo } from 'react';
 
 import { TabManager } from './TabManager';
 
-import { DEFAULT_ELEMENT, DEFAULT_EVENTS } from './utils/defaults';
-import { IS_BROWSER } from './utils/isBrowser';
-import { debounceFn } from './utils/debounce';
-import { throttleFn } from './utils/throttle';
-import { setTimers, timers as timer } from './utils/timers';
-import { now } from './utils/now';
+import {
+	DEFAULT_ELEMENT,
+	DEFAULT_EVENTS,
+	IS_BROWSER,
+	debounceFn,
+	throttleFn,
+	setTimers,
+	timers as timer,
+	now
+} from './utils';
 
-import type { EventType } from './types/EventType';
-import type { IEventHandler } from './types/IEventHandler';
-import type { IIdleTimer } from './types/IIdleTimer';
-import type { IIdleTimerProps } from './types/IIdleTimerProps';
-import type { IPresenceChangeHandler } from './types/IPresenceChangeHandler';
-import type { IMessageHandler } from './types/IMessageHandler';
-import type { EventsType } from './types/EventsType';
-import type { MessageType } from './types/MessageType';
+import type {
+	EventType,
+	IEventHandler,
+	IIdleTimer,
+	IIdleTimerProps,
+	IPresenceChangeHandler,
+	IMessageHandler,
+	EventsType,
+	MessageType
+} from './types';
 
 const MAX_TIMEOUT = 2147483647;
 

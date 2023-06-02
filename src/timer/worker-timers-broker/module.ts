@@ -2,66 +2,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { generateUniqueNumber } from '../fast-unique-numbers/module';
-import { isCallNotification } from './guards/call-notification';
-import { isClearResponse } from './guards/clear-response';
-
-export interface IClearRequest {
-	id: number;
-	method: 'clear';
-	params: {
-		timerId: number;
-		timerType: TTimerType;
-	};
-}
-
-export type TTimerType = 'interval' | 'timeout';
-
-export interface ISetNotification {
-	id: null;
-	method: 'set';
-	params: {
-		delay: number;
-		now: number;
-		timerId: number;
-		timerType: TTimerType;
-	};
-}
-
-export interface ICallNotification {
-	id: null;
-	method: 'call';
-	params: {
-		timerId: number;
-		timerType: TTimerType;
-	};
-}
-
-export interface IClearResponse {
-	error: null;
-	id: number;
-}
-
-export interface IErrorNotification {
-	error: {
-		message: string;
-	};
-	id: null;
-	result: null;
-}
-
-export interface IErrorResponse {
-	error: {
-		message: string;
-	};
-	id: number;
-	result: null;
-}
-
-export type TWorkerMessage = ICallNotification | IClearResponse | IErrorNotification | IErrorResponse;
-
-export interface IWorkerEvent extends Event {
-	data: TWorkerMessage;
-}
+import { isCallNotification, isClearResponse } from './guards';
+import { IClearRequest, ISetNotification, IWorkerEvent, TTimerType } from './types';
 
 export const load = (url: string) => {
 	// Prefilling the Maps with a function indexed by zero is necessary to be compliant with the specification.

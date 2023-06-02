@@ -1,8 +1,10 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-export const createLoadOrReturnBroker = <Broker>(loadBroker: (url: string) => Broker, worker: string) => {
+export const createLoadOrReturnBroker = <Broker>(
+	loadBroker: (url: string) => Broker,
+	worker: string
+): (() => Broker) => {
 	let broker: null | Broker = null;
 
-	return () => {
+	return (): Broker => {
 		if (broker !== null) {
 			return broker;
 		}

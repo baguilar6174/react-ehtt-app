@@ -1,10 +1,8 @@
 /* eslint-disable no-empty */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { timers } from '../utils/timers';
-import { sleep } from '../utils/sleep';
-import { createToken } from '../utils/token';
-import { MessageActionType } from '../types/MessageActionType';
+import { timers, sleep, createToken } from '../utils';
+import { MessageActionType } from '../types';
 
 interface IInternalMessage {
 	action: MessageActionType;

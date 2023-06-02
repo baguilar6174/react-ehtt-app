@@ -2,8 +2,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { ComponentType, Component, forwardRef } from 'react';
 import { IIdleTimer, IIdleTimerProps, useIdleTimer } from '.';
-import type { IEventHandler } from './types/IEventHandler';
-import type { PresenceType } from './types/PresenceType';
+import type { IEventHandler, PresenceType } from './types';
 
 /**
  * Higher Order Component (HOC) for adding IdleTimer.
