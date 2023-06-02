@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useIdleTimer } from './idle-timer';
+import { useIdleTimer } from './timer/idle-timer';
 
 function AppidleTimer(): JSX.Element {
 	const [remaining, setRemaining] = useState<number>(0);

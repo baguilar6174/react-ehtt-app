@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { generateUniqueNumber } from 'fast-unique-numbers';
-// import { IWorkerEvent, TTimerType } from 'worker-timers-worker';
+import { generateUniqueNumber } from '../fast-unique-numbers/module';
 import { isCallNotification } from './guards/call-notification';
 import { isClearResponse } from './guards/clear-response';
 
