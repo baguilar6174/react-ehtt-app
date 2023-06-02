@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RefObject } from 'react';
-
-import { IIdleTimer } from './IIdleTimer';
 import { EventsType } from './EventsType';
 import { PresenceType } from './PresenceType';
+import { IIdleTimer } from './IIdleTimer';
 import { ITimers } from './ITimers';
 
 export interface IIdleTimerProps {
@@ -42,7 +42,7 @@ export interface IIdleTimerProps {
 	 *
 	 * @default document
 	 */
-	element?: Document | HTMLElement;
+	element?: Document | HTMLElement | null;
 
 	/**
 	 * DOM events to watch for activity on.
@@ -103,7 +103,6 @@ export interface IIdleTimerProps {
 	 *
 	 * @default () => {}
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	onMessage?: (data: any, idleTimer?: IIdleTimer) => void;
 
 	/**

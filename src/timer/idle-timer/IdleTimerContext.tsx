@@ -1,4 +1,5 @@
-import React, { PropsWithChildren, createContext, useContext } from 'react';
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { PropsWithChildren, createContext, useContext } from 'react';
 import { IIdleTimer, IIdleTimerProps, useIdleTimer } from '.';
 
 /**
@@ -17,10 +18,9 @@ export type IIdleTimerContext = typeof IdleTimerContext;
  * @param props  IdleTimer configuration
  * @returns Component wrapped with IdleTimer
  */
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function IdleTimerProvider(props?: PropsWithChildren<IIdleTimerProps>) {
+export function IdleTimerProvider(props: PropsWithChildren<IIdleTimerProps>) {
 	const idleTimer = useIdleTimer(props);
-	return <IdleTimerContext.Provider value={idleTimer}>{props && props.children}</IdleTimerContext.Provider>;
+	return <IdleTimerContext.Provider value={idleTimer}>{props.children}</IdleTimerContext.Provider>;
 }
 
 /**
@@ -35,6 +35,10 @@ export const IdleTimerConsumer = IdleTimerContext.Consumer;
  *
  * @returns IdleTimer API
  */
-export function useIdleTimerContext(): IIdleTimer | null {
-	return useContext(IdleTimerContext);
+export function useIdleTimerContext(): IIdleTimer {
+	const currentIdleTimerContext = useContext(IdleTimerContext);
+	if (!currentIdleTimerContext) {
+		throw new Error('useIdleTimerContext has to be used within <IdleTimerContext.Provider>');
+	}
+	return currentIdleTimerContext;
 }

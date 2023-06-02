@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IS_BROWSER } from './isBrowser';
 import { EventsType } from '../types/EventsType';
 
@@ -7,7 +6,7 @@ import { EventsType } from '../types/EventsType';
  *
  * @private
  */
-export const DEFAULT_ELEMENT: Document | HTMLElement | any = IS_BROWSER ? document : null;
+export const DEFAULT_ELEMENT: Document | HTMLElement | null = IS_BROWSER ? document : null;
 
 /**
  * The default events to determine activity.

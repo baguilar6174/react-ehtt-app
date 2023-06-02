@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { FnType } from '../types/FnType';
 import { IEventHandler } from '../types/IEventHandler';
 
@@ -13,18 +13,18 @@ import { IEventHandler } from '../types/IEventHandler';
  * @private
  **/
 export function debounceFn(fn: FnType, delay: number): IEventHandler {
-	let timerId: any;
+	let timerId: number | undefined;
 	function result(...args: any[]): any {
 		if (timerId) {
 			clearTimeout(timerId);
 		}
 		timerId = setTimeout(() => {
 			fn(...args);
-			timerId = null;
+			timerId = undefined;
 		}, delay);
 	}
 
-	result.cancel = function (): void {
+	result.cancel = function () {
 		clearTimeout(timerId);
 	};
 

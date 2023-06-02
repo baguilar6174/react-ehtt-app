@@ -7,12 +7,9 @@ export type TTimerType = 'interval' | 'timeout';
 
 export interface ICallNotification {
 	id: null;
-
 	method: 'call';
-
 	params: {
 		timerId: number;
-
 		timerType: TTimerType;
 	};
 }
@@ -21,9 +18,7 @@ export interface IErrorNotification {
 	error: {
 		message: string;
 	};
-
 	id: null;
-
 	result: null;
 }
 
@@ -31,9 +26,7 @@ export interface IErrorResponse {
 	error: {
 		message: string;
 	};
-
 	id: number;
-
 	result: null;
 }
 

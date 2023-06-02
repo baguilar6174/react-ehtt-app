@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, ComponentType, forwardRef } from 'react';
+import { ComponentType, Component, forwardRef } from 'react';
 import { IIdleTimer, IIdleTimerProps, useIdleTimer } from '.';
 import type { IEventHandler } from './types/IEventHandler';
 import type { PresenceType } from './types/PresenceType';
@@ -55,19 +54,19 @@ abstract class IIdleTimerComponent<P, S> extends Component<P, S> {
 	/**
 	 * Function to call when user becomes active.
 	 */
-	onActive?(event: Event): void;
+	onActive?(event?: Event): void;
 	/**
 	 * Function to call on user activity. Can be throttled or debounced using the
 	 * `throttle` and `debounce` props.
 	 */
-	onAction?(event: Event): void;
+	onAction?(event?: Event): void;
 	/**
 	 * Function to call when message is has been emitted.
 	 */
 	onMessage?(data: any): void;
 }
 
-export class IdleTimerComponent<P = IIdleTimer, S = {}> extends IIdleTimerComponent<P, S> {
+export class IdleTimerComponent<P = IIdleTimer, S = object> extends IIdleTimerComponent<P, S> {
 	constructor(props: P & IIdleTimerComponentProps) {
 		super(props);
 		if (this.onPresenceChange && props.setOnPresenceChange) props.setOnPresenceChange(this.onPresenceChange.bind(this));

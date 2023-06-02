@@ -7,12 +7,9 @@ import { isClearResponse } from './guards/clear-response';
 
 export interface IClearRequest {
 	id: number;
-
 	method: 'clear';
-
 	params: {
 		timerId: number;
-
 		timerType: TTimerType;
 	};
 }
@@ -21,28 +18,20 @@ export type TTimerType = 'interval' | 'timeout';
 
 export interface ISetNotification {
 	id: null;
-
 	method: 'set';
-
 	params: {
 		delay: number;
-
 		now: number;
-
 		timerId: number;
-
 		timerType: TTimerType;
 	};
 }
 
 export interface ICallNotification {
 	id: null;
-
 	method: 'call';
-
 	params: {
 		timerId: number;
-
 		timerType: TTimerType;
 	};
 }
@@ -56,9 +45,7 @@ export interface IErrorNotification {
 	error: {
 		message: string;
 	};
-
 	id: null;
-
 	result: null;
 }
 
@@ -66,9 +53,7 @@ export interface IErrorResponse {
 	error: {
 		message: string;
 	};
-
 	id: number;
-
 	result: null;
 }
 

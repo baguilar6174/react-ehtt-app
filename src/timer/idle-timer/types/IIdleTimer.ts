@@ -67,7 +67,7 @@ export interface IIdleTimer {
 	/**
 	 * Returns the current tabs id.
 	 */
-	getTabId(): string;
+	getTabId(): string | null;
 
 	/**
 	 * Time remaining before idle or prompt.

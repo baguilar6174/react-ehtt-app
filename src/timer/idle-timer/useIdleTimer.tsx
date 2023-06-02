@@ -1,8 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useEffect, useRef, useCallback, useMemo } from 'react';
+
+import { TabManager } from './TabManager';
 
 import { DEFAULT_ELEMENT, DEFAULT_EVENTS } from './utils/defaults';
 import { IS_BROWSER } from './utils/isBrowser';
@@ -52,7 +53,7 @@ export function useIdleTimer({
 	name = 'idle-timer',
 	syncTimers = 0,
 	leaderElection = false
-}: IIdleTimerProps = {}): any {
+}: IIdleTimerProps = {}): IIdleTimer {
 	// Time References
 	const startTime = useRef<number>(now());
 	const lastReset = useRef<number>(now());
@@ -70,6 +71,9 @@ export function useIdleTimer({
 	const firstLoad = useRef<boolean>(true);
 	const eventsBound = useRef<boolean>(false);
 	const tId = useRef<number | null>(null);
+
+	// Tab manager
+	const manager = useRef<TabManager | null>(null);
 
 	// Prop references
 	const timeoutRef = useRef<number>(timeout);
@@ -121,6 +125,9 @@ export function useIdleTimer({
 			if (startManually) return;
 			if (idle.current) {
 				emitOnActive.current(undefined, idleTimer);
+				if (manager.current) {
+					manager.current.active();
+				}
 			}
 			start();
 		}
@@ -133,7 +140,7 @@ export function useIdleTimer({
 
 	// Events and element references
 	const immediateEventsRef = useRef<EventsType[]>(immediateEvents);
-	const elementRef = useRef<Node>(element);
+	const elementRef = useRef<Node | null>(element);
 	const eventsRef = useRef<EventsType[]>([...new Set([...events, ...immediateEvents]).values()]);
 
 	// On Presence Change Emitter
@@ -194,7 +201,7 @@ export function useIdleTimer({
 	useEffect(() => {
 		if (crossTab && syncTimers) {
 			sendSyncEvent.current = throttleFn(() => {
-				// if (manager.current) manager.current.active();
+				if (manager.current) manager.current.active();
 			}, syncTimers);
 		}
 	}, [crossTab, syncTimers]);
@@ -239,7 +246,7 @@ export function useIdleTimer({
 	 * Toggles to Idle State
 	 * @private
 	 */
-	const toggleIdle = (): void => {
+	const toggleIdle = () => {
 		destroyTimeout();
 		if (!idle.current) {
 			emitOnIdle.current(undefined, idleTimer);
@@ -264,7 +271,7 @@ export function useIdleTimer({
 	 * @param event Event
 	 * @private
 	 */
-	const toggleActive = (event?: EventType): void => {
+	const toggleActive = (event?: EventType) => {
 		destroyTimeout();
 		if (idle.current || prompted.current) {
 			emitOnActive.current(event, idleTimer);
@@ -298,30 +305,30 @@ export function useIdleTimer({
 
 			// Handle prompt
 			if (!skipPrompt && promptTimeoutRef.current > 0 && !prompted.current) {
-				// if (manager.current) {
-				// 	manager.current.prompt();
-				// } else {
-				// 	togglePrompted(event);
-				// }
+				if (manager.current) {
+					manager.current.prompt();
+				} else {
+					togglePrompted(event);
+				}
 				return;
 			}
 
 			// Handle idle
-			// if (manager.current) {
-			// 	manager.current.idle();
-			// } else {
-			// 	toggleIdle();
-			// }
+			if (manager.current) {
+				manager.current.idle();
+			} else {
+				toggleIdle();
+			}
 
 			return;
 		}
 
 		// Handle Active
-		// if (manager.current) {
-		// 	manager.current.active();
-		// } else {
-		// 	toggleActive(event);
-		// }
+		if (manager.current) {
+			manager.current.active();
+		} else {
+			toggleActive(event);
+		}
 	};
 
 	/**
@@ -383,7 +390,6 @@ export function useIdleTimer({
 	 * @private
 	 */
 	const handleEvent = useRef<IEventHandler | any>(eventHandler);
-
 	useEffect(() => {
 		const eventsWereBound = eventsBound.current;
 		if (eventsWereBound) unbindEvents();
@@ -409,10 +415,12 @@ export function useIdleTimer({
 		// to the supplied element
 		if (!eventsBound.current) {
 			eventsRef.current.forEach((e) => {
-				elementRef.current.addEventListener(e, handleEvent.current, {
-					capture: true,
-					passive: true
-				});
+				if (elementRef.current) {
+					elementRef.current.addEventListener(e, handleEvent.current, {
+						capture: true,
+						passive: true
+					});
+				}
 			});
 			eventsBound.current = true;
 		}
@@ -431,9 +439,11 @@ export function useIdleTimer({
 		// Unbind all events
 		if (eventsBound.current || force) {
 			eventsRef.current.forEach((e) => {
-				elementRef.current.removeEventListener(e, handleEvent.current, {
-					capture: true
-				});
+				if (elementRef.current) {
+					elementRef.current.removeEventListener(e, handleEvent.current, {
+						capture: true
+					});
+				}
 			});
 			eventsBound.current = false;
 		}
@@ -459,14 +469,14 @@ export function useIdleTimer({
 			remaining.current = 0;
 			promptTime.current = 0;
 
-			// if (manager.current && !remote) {
-			// 	manager.current.start();
-			// }
+			if (manager.current && !remote) {
+				manager.current.start();
+			}
 
 			// Set new timeout
 			createTimeout();
 		},
-		[tId, idle, timeoutRef]
+		[tId, idle, timeoutRef, manager]
 	);
 
 	/**
@@ -491,12 +501,16 @@ export function useIdleTimer({
 			remaining.current = 0;
 			promptTime.current = 0;
 
+			if (manager.current && !remote) {
+				manager.current.reset();
+			}
+
 			// Set new timeout
 			if (!startManually) {
 				createTimeout();
 			}
 		},
-		[tId, idle, timeoutRef, startManually]
+		[tId, idle, timeoutRef, startManually, manager]
 	);
 
 	/**
@@ -523,10 +537,14 @@ export function useIdleTimer({
 			promptTime.current = 0;
 			lastReset.current = now();
 
+			if (manager.current && !remote) {
+				manager.current.activate();
+			}
+
 			// Set new timeout
 			createTimeout();
 		},
-		[tId, idle, prompted, timeoutRef]
+		[tId, idle, prompted, timeoutRef, manager]
 	);
 
 	/**
@@ -550,9 +568,13 @@ export function useIdleTimer({
 			// Clear existing timeout
 			destroyTimeout();
 
+			if (manager.current && !remote) {
+				manager.current.pause();
+			}
+
 			return true;
 		},
-		[tId]
+		[tId, manager]
 	);
 
 	/**
@@ -579,25 +601,30 @@ export function useIdleTimer({
 				promptTime.current = now();
 			}
 
+			// Replicate to manager
+			if (manager.current && !remote) {
+				manager.current.resume();
+			}
+
 			return true;
 		},
-		[tId, timeoutRef, remaining]
+		[tId, timeoutRef, remaining, manager]
 	);
 
-	// /**
-	//  * Sends a message to all tabs.
-	//  */
-	// const message = useCallback<(data: MessageType, emitOnSelf?: boolean) => void>(
-	// 	(data: MessageType, emitOnSelf?: boolean): void => {
-	// 		if (manager.current) {
-	// 			if (emitOnSelf) emitOnMessage.current(data, idleTimer);
-	// 			// manager.current.message(data);
-	// 		} else if (emitOnSelf) {
-	// 			emitOnMessage.current(data, idleTimer);
-	// 		}
-	// 	},
-	// 	[onMessage]
-	// );
+	/**
+	 * Sends a message to all tabs.
+	 */
+	const message = useCallback<(data: MessageType, emitOnSelf?: boolean) => void>(
+		(data: MessageType, emitOnSelf?: boolean): void => {
+			if (manager.current) {
+				if (emitOnSelf) emitOnMessage.current(data, idleTimer);
+				manager.current.message(data);
+			} else if (emitOnSelf) {
+				emitOnMessage.current(data, idleTimer);
+			}
+		},
+		[onMessage]
+	);
 
 	/**
 	 * Returns whether or not the user is idle.
@@ -617,29 +644,29 @@ export function useIdleTimer({
 		return prompted.current;
 	}, [prompted]);
 
-	// /**
-	//  * Returns whether or not this is the leader tab.
-	//  */
-	// const isLeader = useCallback<() => boolean>((): boolean => {
-	// 	if (!manager.current) return false;
-	// 	return manager.current.isLeader;
-	// }, [manager]);
+	/**
+	 * Returns whether or not this is the leader tab.
+	 */
+	const isLeader = useCallback<() => boolean>((): boolean => {
+		if (!manager.current) return false;
+		return manager.current.isLeader;
+	}, [manager]);
 
-	// /**
-	//  * Returns whether or not this is the last active tab.
-	//  */
-	// const isLastActiveTab = useCallback<() => boolean>((): boolean => {
-	// 	if (!manager.current) return false;
-	// 	return manager.current.isLastActive;
-	// }, [manager]);
+	/**
+	 * Returns whether or not this is the last active tab.
+	 */
+	const isLastActiveTab = useCallback<() => boolean>((): boolean => {
+		if (!manager.current) return false;
+		return manager.current.isLastActive;
+	}, [manager]);
 
-	// /**
-	//  * Returns the current tabs id
-	//  */
-	// const getTabId = useCallback<() => string>((): string => {
-	// 	if (!manager.current) return String(null);
-	// 	return manager.current.token;
-	// }, [manager]);
+	/**
+	 * Returns the current tabs id
+	 */
+	const getTabId = useCallback<() => string | null>((): string | null => {
+		if (!manager.current) return null;
+		return manager.current.token;
+	}, [manager]);
 
 	/**
 	 * Time remaining before idle
@@ -705,8 +732,8 @@ export function useIdleTimer({
 	 * @return Milliseconds idle.
 	 */
 	const getIdleTime = useCallback<() => number>((): number => {
-		if (idle.current && lastIdle.current) {
-			return Math.round(now() - lastIdle.current + idleTime.current);
+		if (idle.current) {
+			return Math.round(now() - Number(lastIdle.current) + idleTime.current);
 		}
 		return Math.round(idleTime.current);
 	}, [lastIdle, idleTime]);
@@ -717,8 +744,8 @@ export function useIdleTimer({
 	 * @return Milliseconds idle.
 	 */
 	const getTotalIdleTime = useCallback<() => number>((): number => {
-		if (idle.current && lastIdle.current) {
-			return Math.round(now() - lastIdle.current + totalIdleTime.current);
+		if (idle.current) {
+			return Math.round(now() - Number(lastIdle.current) + totalIdleTime.current);
 		}
 		return Math.round(totalIdleTime.current);
 	}, [lastIdle, totalIdleTime]);
@@ -754,7 +781,8 @@ export function useIdleTimer({
 		if (timers) setTimers(timers);
 
 		// Add beforeunload listener
-		const beforeunload = (): void => {
+		const beforeunload = () => {
+			if (manager.current) manager.current.close();
 			if (callOnAction.cancel) callOnAction.cancel();
 			destroyTimeout();
 			unbindEvents(true);
@@ -769,11 +797,59 @@ export function useIdleTimer({
 			if (IS_BROWSER) {
 				window.removeEventListener('beforeunload', beforeunload);
 			}
+			if (manager.current) manager.current.close();
 			if (callOnAction.cancel) callOnAction.cancel();
 			destroyTimeout();
 			unbindEvents(true);
 		};
 	}, []);
+
+	// Cross Tab Manager
+	useEffect(() => {
+		// Close any existing manager
+		if (manager.current) {
+			manager.current.close();
+		}
+
+		// Set up cross tab
+		if (crossTab) {
+			manager.current = new TabManager({
+				channelName: name,
+				leaderElection,
+				onPrompt: () => {
+					togglePrompted();
+				},
+				onIdle: () => {
+					toggleIdle();
+				},
+				onActive: () => {
+					toggleActive();
+				},
+				onMessage: (data: any) => {
+					emitOnMessage.current(data, idleTimer);
+				},
+				start,
+				reset,
+				activate,
+				pause,
+				resume
+			});
+		} else {
+			manager.current = null;
+		}
+	}, [
+		crossTab,
+		name,
+		leaderElection,
+		emitOnPrompt,
+		emitOnIdle,
+		emitOnActive,
+		emitOnMessage,
+		start,
+		reset,
+		pause,
+		resume
+	]);
 
 	// Dynamic Start
 	useEffect(() => {
@@ -812,6 +888,7 @@ export function useIdleTimer({
 
 	// Return API
 	const idleTimer = {
+		message,
 		start,
 		reset,
 		activate,
@@ -819,6 +896,9 @@ export function useIdleTimer({
 		resume,
 		isIdle,
 		isPrompted,
+		isLeader,
+		isLastActiveTab,
+		getTabId,
 		getRemainingTime,
 		getElapsedTime,
 		getTotalElapsedTime,
@@ -828,27 +908,27 @@ export function useIdleTimer({
 		getTotalIdleTime,
 		getActiveTime,
 		getTotalActiveTime,
-		setOnPresenceChange: (fn: IPresenceChangeHandler): void => {
+		setOnPresenceChange: (fn: IPresenceChangeHandler) => {
 			onPresenceChange = fn;
 			emitOnPresenceChange.current = fn;
 		},
-		setOnPrompt: (fn: IEventHandler): void => {
+		setOnPrompt: (fn: IEventHandler) => {
 			onPrompt = fn;
 			emitOnPrompt.current = fn;
 		},
-		setOnIdle: (fn: IEventHandler): void => {
+		setOnIdle: (fn: IEventHandler) => {
 			onIdle = fn;
 			emitOnIdle.current = fn;
 		},
-		setOnActive: (fn: IEventHandler): void => {
+		setOnActive: (fn: IEventHandler) => {
 			onActive = fn;
 			emitOnActive.current = fn;
 		},
-		setOnAction: (fn: IEventHandler): void => {
+		setOnAction: (fn: IEventHandler) => {
 			onAction = fn;
 			emitOnAction.current = fn;
 		},
-		setOnMessage: (fn: IEventHandler): void => {
+		setOnMessage: (fn: IEventHandler) => {
 			onMessage = fn;
 			emitOnMessage.current = fn;
 		}

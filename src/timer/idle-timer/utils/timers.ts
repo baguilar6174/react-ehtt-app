@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import * as worker from '../../workers-timer/module';
 import { IS_BROWSER } from './isBrowser';
 import { ITimers } from '../types/ITimers';
@@ -16,7 +17,7 @@ export const workerTimers: ITimers = {
 	clearInterval: worker.clearInterval
 };
 
-export function createMocks(): void {
+export function createMocks() {
 	timers.setTimeout = setTimeout;
 	timers.clearTimeout = clearTimeout;
 	timers.setInterval = setInterval;
