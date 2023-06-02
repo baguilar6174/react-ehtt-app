@@ -1,9 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useEffect, useRef, useCallback, useMemo } from 'react';
-
-import { TabManager } from './TabManager';
 
 import { DEFAULT_ELEMENT, DEFAULT_EVENTS } from './utils/defaults';
 import { IS_BROWSER } from './utils/isBrowser';
@@ -53,7 +52,7 @@ export function useIdleTimer({
 	name = 'idle-timer',
 	syncTimers = 0,
 	leaderElection = false
-}: IIdleTimerProps = {}): IIdleTimer {
+}: IIdleTimerProps = {}): any {
 	// Time References
 	const startTime = useRef<number>(now());
 	const lastReset = useRef<number>(now());
@@ -71,9 +70,6 @@ export function useIdleTimer({
 	const firstLoad = useRef<boolean>(true);
 	const eventsBound = useRef<boolean>(false);
 	const tId = useRef<number | null>(null);
-
-	// Tab manager
-	const manager = useRef<TabManager | null>(null);
 
 	// Prop references
 	const timeoutRef = useRef<number>(timeout);
@@ -125,9 +121,6 @@ export function useIdleTimer({
 			if (startManually) return;
 			if (idle.current) {
 				emitOnActive.current(undefined, idleTimer);
-				if (manager.current) {
-					manager.current.active();
-				}
 			}
 			start();
 		}
@@ -201,7 +194,7 @@ export function useIdleTimer({
 	useEffect(() => {
 		if (crossTab && syncTimers) {
 			sendSyncEvent.current = throttleFn(() => {
-				if (manager.current) manager.current.active();
+				// if (manager.current) manager.current.active();
 			}, syncTimers);
 		}
 	}, [crossTab, syncTimers]);
@@ -305,30 +298,30 @@ export function useIdleTimer({
 
 			// Handle prompt
 			if (!skipPrompt && promptTimeoutRef.current > 0 && !prompted.current) {
-				if (manager.current) {
-					manager.current.prompt();
-				} else {
-					togglePrompted(event);
-				}
+				// if (manager.current) {
+				// 	manager.current.prompt();
+				// } else {
+				// 	togglePrompted(event);
+				// }
 				return;
 			}
 
 			// Handle idle
-			if (manager.current) {
-				manager.current.idle();
-			} else {
-				toggleIdle();
-			}
+			// if (manager.current) {
+			// 	manager.current.idle();
+			// } else {
+			// 	toggleIdle();
+			// }
 
 			return;
 		}
 
 		// Handle Active
-		if (manager.current) {
-			manager.current.active();
-		} else {
-			toggleActive(event);
-		}
+		// if (manager.current) {
+		// 	manager.current.active();
+		// } else {
+		// 	toggleActive(event);
+		// }
 	};
 
 	/**
@@ -466,14 +459,14 @@ export function useIdleTimer({
 			remaining.current = 0;
 			promptTime.current = 0;
 
-			if (manager.current && !remote) {
-				manager.current.start();
-			}
+			// if (manager.current && !remote) {
+			// 	manager.current.start();
+			// }
 
 			// Set new timeout
 			createTimeout();
 		},
-		[tId, idle, timeoutRef, manager]
+		[tId, idle, timeoutRef]
 	);
 
 	/**
@@ -498,16 +491,12 @@ export function useIdleTimer({
 			remaining.current = 0;
 			promptTime.current = 0;
 
-			if (manager.current && !remote) {
-				manager.current.reset();
-			}
-
 			// Set new timeout
 			if (!startManually) {
 				createTimeout();
 			}
 		},
-		[tId, idle, timeoutRef, startManually, manager]
+		[tId, idle, timeoutRef, startManually]
 	);
 
 	/**
@@ -534,14 +523,10 @@ export function useIdleTimer({
 			promptTime.current = 0;
 			lastReset.current = now();
 
-			if (manager.current && !remote) {
-				manager.current.activate();
-			}
-
 			// Set new timeout
 			createTimeout();
 		},
-		[tId, idle, prompted, timeoutRef, manager]
+		[tId, idle, prompted, timeoutRef]
 	);
 
 	/**
@@ -565,13 +550,9 @@ export function useIdleTimer({
 			// Clear existing timeout
 			destroyTimeout();
 
-			if (manager.current && !remote) {
-				manager.current.pause();
-			}
-
 			return true;
 		},
-		[tId, manager]
+		[tId]
 	);
 
 	/**
@@ -598,30 +579,25 @@ export function useIdleTimer({
 				promptTime.current = now();
 			}
 
-			// Replicate to manager
-			if (manager.current && !remote) {
-				manager.current.resume();
-			}
-
 			return true;
 		},
-		[tId, timeoutRef, remaining, manager]
+		[tId, timeoutRef, remaining]
 	);
 
-	/**
-	 * Sends a message to all tabs.
-	 */
-	const message = useCallback<(data: MessageType, emitOnSelf?: boolean) => void>(
-		(data: MessageType, emitOnSelf?: boolean): void => {
-			if (manager.current) {
-				if (emitOnSelf) emitOnMessage.current(data, idleTimer);
-				manager.current.message(data);
-			} else if (emitOnSelf) {
-				emitOnMessage.current(data, idleTimer);
-			}
-		},
-		[onMessage]
-	);
+	// /**
+	//  * Sends a message to all tabs.
+	//  */
+	// const message = useCallback<(data: MessageType, emitOnSelf?: boolean) => void>(
+	// 	(data: MessageType, emitOnSelf?: boolean): void => {
+	// 		if (manager.current) {
+	// 			if (emitOnSelf) emitOnMessage.current(data, idleTimer);
+	// 			// manager.current.message(data);
+	// 		} else if (emitOnSelf) {
+	// 			emitOnMessage.current(data, idleTimer);
+	// 		}
+	// 	},
+	// 	[onMessage]
+	// );
 
 	/**
 	 * Returns whether or not the user is idle.
@@ -641,29 +617,29 @@ export function useIdleTimer({
 		return prompted.current;
 	}, [prompted]);
 
-	/**
-	 * Returns whether or not this is the leader tab.
-	 */
-	const isLeader = useCallback<() => boolean>((): boolean => {
-		if (!manager.current) return false;
-		return manager.current.isLeader;
-	}, [manager]);
+	// /**
+	//  * Returns whether or not this is the leader tab.
+	//  */
+	// const isLeader = useCallback<() => boolean>((): boolean => {
+	// 	if (!manager.current) return false;
+	// 	return manager.current.isLeader;
+	// }, [manager]);
 
-	/**
-	 * Returns whether or not this is the last active tab.
-	 */
-	const isLastActiveTab = useCallback<() => boolean>((): boolean => {
-		if (!manager.current) return false;
-		return manager.current.isLastActive;
-	}, [manager]);
+	// /**
+	//  * Returns whether or not this is the last active tab.
+	//  */
+	// const isLastActiveTab = useCallback<() => boolean>((): boolean => {
+	// 	if (!manager.current) return false;
+	// 	return manager.current.isLastActive;
+	// }, [manager]);
 
-	/**
-	 * Returns the current tabs id
-	 */
-	const getTabId = useCallback<() => string>((): string => {
-		if (!manager.current) return String(null);
-		return manager.current.token;
-	}, [manager]);
+	// /**
+	//  * Returns the current tabs id
+	//  */
+	// const getTabId = useCallback<() => string>((): string => {
+	// 	if (!manager.current) return String(null);
+	// 	return manager.current.token;
+	// }, [manager]);
 
 	/**
 	 * Time remaining before idle
@@ -779,7 +755,6 @@ export function useIdleTimer({
 
 		// Add beforeunload listener
 		const beforeunload = (): void => {
-			if (manager.current) manager.current.close();
 			if (callOnAction.cancel) callOnAction.cancel();
 			destroyTimeout();
 			unbindEvents(true);
@@ -794,59 +769,11 @@ export function useIdleTimer({
 			if (IS_BROWSER) {
 				window.removeEventListener('beforeunload', beforeunload);
 			}
-			if (manager.current) manager.current.close();
 			if (callOnAction.cancel) callOnAction.cancel();
 			destroyTimeout();
 			unbindEvents(true);
 		};
 	}, []);
-
-	// Cross Tab Manager
-	useEffect(() => {
-		// Close any existing manager
-		if (manager.current) {
-			manager.current.close();
-		}
-
-		// Set up cross tab
-		if (crossTab) {
-			manager.current = new TabManager({
-				channelName: name,
-				leaderElection,
-				onPrompt: (): void => {
-					togglePrompted();
-				},
-				onIdle: (): void => {
-					toggleIdle();
-				},
-				onActive: (): void => {
-					toggleActive();
-				},
-				onMessage: (data: any): void => {
-					emitOnMessage.current(data, idleTimer);
-				},
-				start,
-				reset,
-				activate,
-				pause,
-				resume
-			});
-		} else {
-			manager.current = null;
-		}
-	}, [
-		crossTab,
-		name,
-		leaderElection,
-		emitOnPrompt,
-		emitOnIdle,
-		emitOnActive,
-		emitOnMessage,
-		start,
-		reset,
-		pause,
-		resume
-	]);
 
 	// Dynamic Start
 	useEffect(() => {
@@ -885,7 +812,6 @@ export function useIdleTimer({
 
 	// Return API
 	const idleTimer = {
-		message,
 		start,
 		reset,
 		activate,
@@ -893,9 +819,6 @@ export function useIdleTimer({
 		resume,
 		isIdle,
 		isPrompted,
-		isLeader,
-		isLastActiveTab,
-		getTabId,
 		getRemainingTime,
 		getElapsedTime,
 		getTotalElapsedTime,

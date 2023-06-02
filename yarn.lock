@@ -2772,34 +2772,6 @@ word-wrap@^1.2.3:
   resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.3.tgz#610636f6b1f703891bd34771ccb17fb93b47079c"
   integrity sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==
 
-worker-timers-broker@^6.0.89:
-  version "6.0.89"
-  resolved "https://registry.yarnpkg.com/worker-timers-broker/-/worker-timers-broker-6.0.89.tgz#830ed9c5b81e467214279cdd926c157f88b25d4c"
-  integrity sha512-0WK8PCh9y3DJ1vCvo/Q3IEXkW88Rg3oYDI3YGOUyg+9zaHXPuvvCKKkQWyHYLwKU5CQorqikHkPQoKHxEQzpJw==
-  dependencies:
-    "@babel/runtime" "^7.22.3"
-    fast-unique-numbers "^8.0.3"
-    tslib "^2.5.2"
-    worker-timers-worker "^7.0.53"
-
-worker-timers-worker@^7.0.53:
-  version "7.0.53"
-  resolved "https://registry.yarnpkg.com/worker-timers-worker/-/worker-timers-worker-7.0.53.tgz#5fed40c295f56248b6a64d639bddfccf21081837"
-  integrity sha512-LM9FigaRUnluD8gAfOPHA5BZ9NKmSKn8Z8wDsdl0MUtXesy2LhJd6ZgGecyzwHcUEs8RsnEAgZIz/R6rBDhH5g==
-  dependencies:
-    "@babel/runtime" "^7.22.3"
-    tslib "^2.5.2"
-
-worker-timers@^7.0.69:
-  version "7.0.69"
-  resolved "https://registry.yarnpkg.com/worker-timers/-/worker-timers-7.0.69.tgz#61e3f29ae14173086843a95baffc229f2faef1ba"
-  integrity sha512-NbFuIipZxPLCwuQ0SiPrBJZ/VGjFK9FspXfLH1NftgaCFEhvSIzMmpzMQ/veZkntFZvU3mXRxv8JgtSgZBa3Zw==
-  dependencies:
-    "@babel/runtime" "^7.22.3"
-    tslib "^2.5.2"
-    worker-timers-broker "^6.0.89"
-    worker-timers-worker "^7.0.53"
-
 wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"

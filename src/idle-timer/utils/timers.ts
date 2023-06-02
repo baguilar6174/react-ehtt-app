@@ -1,4 +1,4 @@
-import * as worker from 'worker-timers';
+import * as worker from '../../workers-timer/module';
 import { IS_BROWSER } from './isBrowser';
 import { ITimers } from '../types/ITimers';
 
