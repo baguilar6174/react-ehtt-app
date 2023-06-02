@@ -93,11 +93,11 @@ class Polyfill {
 		this.mc.port1.onmessageerror = value;
 	}
 
-	public addEventListener(event: string, listener: (event: MessageEvent<any>) => void): void {
+	public addEventListener(event: any, listener: (event: MessageEvent<any>) => void): void {
 		return this.mc.port1.addEventListener(event, listener);
 	}
 
-	public removeEventListener(event: string, listener: (event: MessageEvent<any>) => void): void {
+	public removeEventListener(event: any, listener: (event: MessageEvent<any>) => void): void {
 		return this.mc.port1.removeEventListener(event, listener);
 	}
 

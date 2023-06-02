@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BroadcastChannel } from './BroadcastChannel';
 import { LeaderElector } from './LeaderElector';
 import { createToken } from '../utils/token';
@@ -30,7 +31,7 @@ interface IMessage {
 }
 
 export class TabManager {
-	private channel: BroadcastChannel;
+	private channel: BroadcastChannel | any;
 	private options: ITabManagerOptions;
 	private elector: LeaderElector | undefined;
 
@@ -221,7 +222,7 @@ export class TabManager {
 
 	close(): void {
 		if (this.options.leaderElection) {
-			this.elector.close();
+			if (this.elector) this.elector.close();
 		}
 		this.send(MessageActionType.DEREGISTER);
 		this.channel.close();

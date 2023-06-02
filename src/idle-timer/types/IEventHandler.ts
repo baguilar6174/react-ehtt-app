@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { EventType } from './EventType';
 import type { IIdleTimer } from './IIdleTimer';
 
 export interface IEventHandler {
-	(event?: EventType, idleTimer?: IIdleTimer): void;
+	(event?: EventType | Event | any, idleTimer?: IIdleTimer): void;
 	cancel?: () => void;
 }

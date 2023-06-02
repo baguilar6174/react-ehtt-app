@@ -124,7 +124,7 @@ export function useIdleTimer({
 		if (!firstLoad.current) {
 			if (startManually) return;
 			if (idle.current) {
-				emitOnActive.current(null, idleTimer);
+				emitOnActive.current(undefined, idleTimer);
 				if (manager.current) {
 					manager.current.active();
 				}
@@ -180,7 +180,7 @@ export function useIdleTimer({
 	}, [onMessage]);
 
 	const callOnAction = useMemo<IEventHandler>(() => {
-		const call: IEventHandler = (event: EventType, idleTimer: IIdleTimer) => emitOnAction.current(event, idleTimer);
+		const call = (event: EventType, idleTimer: IIdleTimer) => emitOnAction.current(event, idleTimer);
 
 		// Create debounced action if applicable
 		if (debounce > 0) {
@@ -380,7 +380,7 @@ export function useIdleTimer({
 		createTimeout();
 
 		// Send sync event
-		if (crossTab && syncTimers) sendSyncEvent.current();
+		if (crossTab && syncTimers && sendSyncEvent.current) sendSyncEvent.current();
 	};
 
 	/**
@@ -389,7 +389,7 @@ export function useIdleTimer({
 	 *
 	 * @private
 	 */
-	const handleEvent = useRef<IEventHandler>(eventHandler);
+	const handleEvent = useRef<IEventHandler | any>(eventHandler);
 
 	useEffect(() => {
 		const eventsWereBound = eventsBound.current;
