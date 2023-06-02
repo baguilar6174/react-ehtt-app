@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { timers } from '../utils/timers';
 
 /**
  * Collection of channels
  */
-const channels = {};
+const channels: any = {};
 
 /**
  * Polyfill for BroadcastChannel.
@@ -40,7 +41,7 @@ class Polyfill {
 
 	private onStorage(event: StorageEvent): void {
 		if (event.storageArea !== window.localStorage) return;
-		if (event.key.substring(0, this.name.length) !== this.name) return;
+		if (event.key && event.key.substring(0, this.name.length) !== this.name) return;
 		if (event.newValue === null) return;
 		const data = JSON.parse(event.newValue);
 		this.mc.port2.postMessage(data);
@@ -76,7 +77,7 @@ class Polyfill {
 		channels[this.name].splice(index, 1);
 	}
 
-	get onmessage() {
+	get onmessage(): any {
 		return this.mc.port1.onmessage;
 	}
 
@@ -84,7 +85,7 @@ class Polyfill {
 		this.mc.port1.onmessage = value;
 	}
 
-	get onmessageerror() {
+	get onmessageerror(): any {
 		return this.mc.port1.onmessageerror;
 	}
 
@@ -92,11 +93,11 @@ class Polyfill {
 		this.mc.port1.onmessageerror = value;
 	}
 
-	public addEventListener(event: string, listener: (event: MessageEvent<any>) => void) {
+	public addEventListener(event: string, listener: (event: MessageEvent<any>) => void): void {
 		return this.mc.port1.addEventListener(event, listener);
 	}
 
-	public removeEventListener(event: string, listener: (event: MessageEvent<any>) => void) {
+	public removeEventListener(event: string, listener: (event: MessageEvent<any>) => void): void {
 		return this.mc.port1.removeEventListener(event, listener);
 	}
 

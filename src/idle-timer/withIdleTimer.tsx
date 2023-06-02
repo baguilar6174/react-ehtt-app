@@ -1,10 +1,10 @@
-import type { ComponentType } from 'react';
-import type { IIdleTimer, IIdleTimerProps } from '.';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { Component, ComponentType, forwardRef } from 'react';
+import { IIdleTimer, IIdleTimerProps, useIdleTimer } from '.';
 import type { IEventHandler } from './types/IEventHandler';
 import type { PresenceType } from './types/PresenceType';
-
-import React, { Component, forwardRef } from 'react';
-import { useIdleTimer } from '.';
 
 /**
  * Higher Order Component (HOC) for adding IdleTimer.
@@ -70,11 +70,11 @@ abstract class IIdleTimerComponent<P, S> extends Component<P, S> {
 export class IdleTimerComponent<P = IIdleTimer, S = {}> extends IIdleTimerComponent<P, S> {
 	constructor(props: P & IIdleTimerComponentProps) {
 		super(props);
-		if (this.onPresenceChange) props.setOnPresenceChange(this.onPresenceChange.bind(this));
-		if (this.onPrompt) props.setOnPrompt(this.onPrompt.bind(this));
-		if (this.onIdle) props.setOnIdle(this.onIdle.bind(this));
-		if (this.onActive) props.setOnActive(this.onActive.bind(this));
-		if (this.onAction) props.setOnAction(this.onAction.bind(this));
-		if (this.onMessage) props.setOnMessage(this.onMessage.bind(this));
+		if (this.onPresenceChange && props.setOnPresenceChange) props.setOnPresenceChange(this.onPresenceChange.bind(this));
+		if (this.onPrompt && props.setOnPrompt) props.setOnPrompt(this.onPrompt.bind(this));
+		if (this.onIdle && props.setOnIdle) props.setOnIdle(this.onIdle.bind(this));
+		if (this.onActive && props.setOnActive) props.setOnActive(this.onActive.bind(this));
+		if (this.onAction && props.setOnAction) props.setOnAction(this.onAction.bind(this));
+		if (this.onMessage && props.setOnMessage) props.setOnMessage(this.onMessage.bind(this));
 	}
 }

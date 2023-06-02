@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useEffect, useRef, useCallback, useMemo } from 'react';
 
 import { TabManager } from './TabManager';
@@ -55,7 +58,7 @@ export function useIdleTimer({
 	const startTime = useRef<number>(now());
 	const lastReset = useRef<number>(now());
 	const lastIdle = useRef<number | null>(null);
-	const lastActive = useRef<number>(null);
+	const lastActive = useRef<number | null>(null);
 	const idleTime = useRef<number>(0);
 	const totalIdleTime = useRef<number>(0);
 	const promptTime = useRef<number>(0);
@@ -67,10 +70,10 @@ export function useIdleTimer({
 	const paused = useRef<boolean>(false);
 	const firstLoad = useRef<boolean>(true);
 	const eventsBound = useRef<boolean>(false);
-	const tId = useRef<number>(null);
+	const tId = useRef<number | null>(null);
 
 	// Tab manager
-	const manager = useRef<TabManager>(null);
+	const manager = useRef<TabManager | null>(null);
 
 	// Prop references
 	const timeoutRef = useRef<number>(timeout);
@@ -198,7 +201,7 @@ export function useIdleTimer({
 	useEffect(() => {
 		if (crossTab && syncTimers) {
 			sendSyncEvent.current = throttleFn(() => {
-				manager.current.active();
+				if (manager.current) manager.current.active();
 			}, syncTimers);
 		}
 	}, [crossTab, syncTimers]);
@@ -246,7 +249,7 @@ export function useIdleTimer({
 	const toggleIdle = (): void => {
 		destroyTimeout();
 		if (!idle.current) {
-			emitOnIdle.current(null, idleTimer);
+			emitOnIdle.current(undefined, idleTimer);
 			emitOnPresenceChange.current({ type: 'idle' }, idleTimer);
 		}
 
@@ -277,8 +280,8 @@ export function useIdleTimer({
 		prompted.current = false;
 		promptTime.current = 0;
 		idle.current = false;
-		idleTime.current += now() - lastIdle.current;
-		totalIdleTime.current += now() - lastIdle.current;
+		idleTime.current += now() - Number(lastIdle.current);
+		totalIdleTime.current += now() - Number(lastIdle.current);
 		bindEvents();
 		createTimeout();
 	};
@@ -297,7 +300,7 @@ export function useIdleTimer({
 			if (callOnAction.cancel) callOnAction.cancel();
 
 			// Handle slept device
-			const elapsed = now() - lastActive.current;
+			const elapsed = now() - Number(lastActive.current);
 			const skipPrompt = timeoutRef.current + promptTimeoutRef.current < elapsed;
 
 			// Handle prompt
@@ -337,7 +340,7 @@ export function useIdleTimer({
 	const eventHandler = (event: EventType): void => {
 		if (!startOnMount && !lastActive.current) {
 			lastActive.current = now();
-			emitOnActive.current(null, idleTimer);
+			emitOnActive.current(undefined, idleTimer);
 		}
 
 		// Fire onAction event
@@ -356,7 +359,7 @@ export function useIdleTimer({
 		}
 
 		// Determine last time User was active, as can't rely on setTimeout ticking at the correct interval
-		const elapsedTimeSinceLastActive = now() - lastActive.current;
+		const elapsedTimeSinceLastActive = now() - Number(lastActive.current);
 
 		// If the user is idle or last active time is more than timeout, flip the idle state
 		if ((idle.current && !stopOnIdle) || (!idle.current && elapsedTimeSinceLastActive >= timeoutRef.current)) {
@@ -387,6 +390,7 @@ export function useIdleTimer({
 	 * @private
 	 */
 	const handleEvent = useRef<IEventHandler>(eventHandler);
+
 	useEffect(() => {
 		const eventsWereBound = eventsBound.current;
 		if (eventsWereBound) unbindEvents();
@@ -485,8 +489,8 @@ export function useIdleTimer({
 
 			// Reset state
 			lastReset.current = now();
-			idleTime.current += now() - lastIdle.current;
-			totalIdleTime.current += now() - lastIdle.current;
+			idleTime.current += now() - Number(lastIdle.current);
+			totalIdleTime.current += now() - Number(lastIdle.current);
 			idleTime.current = 0;
 			idle.current = false;
 			prompted.current = false;
@@ -657,7 +661,7 @@ export function useIdleTimer({
 	 * Returns the current tabs id
 	 */
 	const getTabId = useCallback<() => string>((): string => {
-		if (!manager.current) return null;
+		if (!manager.current) return String(null);
 		return manager.current.token;
 	}, [manager]);
 

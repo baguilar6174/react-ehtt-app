@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { timers } from '../utils/timers';
 import { sleep } from '../utils/sleep';
 import { createToken } from '../utils/token';
@@ -103,7 +104,7 @@ export class LeaderElector {
 	private awaitLeadership(): Promise<void> {
 		if (this.isLeader) return Promise.resolve();
 		let resolved = false;
-		let interval = null;
+		let interval: any = null;
 
 		return new Promise((resolve) => {
 			// Promise resolution
@@ -132,7 +133,7 @@ export class LeaderElector {
 				this.apply().then(() => {
 					if (this.isLeader) finish();
 				});
-			}, this.options.fallbackInterval);
+			}, Number(this.options.fallbackInterval));
 			this.intervals.push(interval);
 
 			// Try to assume leadership when another leader dies
