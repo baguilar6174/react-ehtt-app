@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import { generateUniqueNumber } from '../fast-unique-numbers/module';
 import { isCallNotification, isClearResponse } from './guards';
 import { IClearRequest, ISetNotification, IWorkerEvent, TTimerType } from './types';
 
 export const load = (url: string) => {
 	// Prefilling the Maps with a function indexed by zero is necessary to be compliant with the specification.
-	const scheduledIntervalFunctions: Map<number, number | Function> = new Map([[0, () => {}]]); // tslint:disable-line no-empty
-	const scheduledTimeoutFunctions: Map<number, number | Function> = new Map([[0, () => {}]]); // tslint:disable-line no-empty
+	const scheduledIntervalFunctions: Map<number, number | Function> = new Map([[0, (): void => {}]]); // tslint:disable-line no-empty
+	const scheduledTimeoutFunctions: Map<number, number | Function> = new Map([[0, (): void => {}]]); // tslint:disable-line no-empty
 	const unrespondedRequests: Map<number, { timerId: number; timerType: TTimerType }> = new Map();
 
 	const worker = new Worker(url);
@@ -86,7 +87,7 @@ export const load = (url: string) => {
 		}
 	});
 
-	const clearInterval = (timerId: number) => {
+	const clearInterval = (timerId: number): void => {
 		const id = generateUniqueNumber(unrespondedRequests);
 
 		unrespondedRequests.set(id, { timerId, timerType: 'interval' });
@@ -99,7 +100,7 @@ export const load = (url: string) => {
 		});
 	};
 
-	const clearTimeout = (timerId: number) => {
+	const clearTimeout = (timerId: number): void => {
 		const id = generateUniqueNumber(unrespondedRequests);
 
 		unrespondedRequests.set(id, { timerId, timerType: 'timeout' });
@@ -112,7 +113,7 @@ export const load = (url: string) => {
 		});
 	};
 
-	const setInterval = (func: Function, delay: number) => {
+	const setInterval = (func: Function, delay: number): number => {
 		const timerId = generateUniqueNumber(scheduledIntervalFunctions);
 
 		scheduledIntervalFunctions.set(timerId, () => {
@@ -147,7 +148,7 @@ export const load = (url: string) => {
 		return timerId;
 	};
 
-	const setTimeout = (func: Function, delay: number) => {
+	const setTimeout = (func: Function, delay: number): number => {
 		const timerId = generateUniqueNumber(scheduledTimeoutFunctions);
 
 		scheduledTimeoutFunctions.set(timerId, func);

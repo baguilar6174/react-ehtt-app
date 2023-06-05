@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-empty */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { BroadcastChannel, Polyfill } from './BroadcastChannel';
 import { LeaderElector } from './LeaderElector';
 import { createToken } from '../utils';
@@ -102,13 +101,13 @@ export class TabManager {
 		this.send(MessageActionType.REGISTER);
 	}
 
-	get isLeader() {
+	get isLeader(): boolean {
 		if (!this.elector)
 			throw new Error('❌ Leader election is not enabled. To Enable it set the "leaderElection" property to true.');
 		return this.elector.isLeader;
 	}
 
-	prompt(token: string = this.token) {
+	prompt(token: string = this.token): void {
 		this.registry.set(token, RegistryState.PROMPTED);
 		const isPrompted = [...this.registry.values()].every((v) => v === RegistryState.PROMPTED);
 
@@ -121,7 +120,7 @@ export class TabManager {
 		}
 	}
 
-	idle(token: string = this.token) {
+	idle(token: string = this.token): void {
 		this.registry.set(token, RegistryState.IDLE);
 		const isIdle = [...this.registry.values()].every((v) => v === RegistryState.IDLE);
 
@@ -135,7 +134,7 @@ export class TabManager {
 		}
 	}
 
-	active(token: string = this.token) {
+	active(token: string = this.token): void {
 		this.allIdle = false;
 		this.registry.set(token, RegistryState.ACTIVE);
 		const isActive = [...this.registry.values()].some((v) => v === RegistryState.ACTIVE);
@@ -152,7 +151,7 @@ export class TabManager {
 		this.isLastActive = token === this.token;
 	}
 
-	start(token = this.token) {
+	start(token = this.token): void {
 		this.allIdle = false;
 		this.registry.set(token, RegistryState.ACTIVE);
 		if (token === this.token) {
@@ -164,7 +163,7 @@ export class TabManager {
 		this.isLastActive = token === this.token;
 	}
 
-	reset(token = this.token) {
+	reset(token = this.token): void {
 		this.allIdle = false;
 		this.registry.set(token, RegistryState.ACTIVE);
 		if (token === this.token) {
@@ -176,7 +175,7 @@ export class TabManager {
 		this.isLastActive = token === this.token;
 	}
 
-	activate(token = this.token) {
+	activate(token = this.token): void {
 		this.allIdle = false;
 		this.registry.set(token, RegistryState.ACTIVE);
 		if (token === this.token) {
@@ -188,7 +187,7 @@ export class TabManager {
 		this.isLastActive = token === this.token;
 	}
 
-	pause(token = this.token) {
+	pause(token = this.token): void {
 		if (token === this.token) {
 			this.send(MessageActionType.PAUSE);
 		} else {
@@ -196,7 +195,7 @@ export class TabManager {
 		}
 	}
 
-	resume(token = this.token) {
+	resume(token = this.token): void {
 		if (token === this.token) {
 			this.send(MessageActionType.RESUME);
 		} else {
@@ -204,7 +203,7 @@ export class TabManager {
 		}
 	}
 
-	message(data: any) {
+	message(data: any): void {
 		try {
 			this.channel.postMessage({
 				action: MessageActionType.MESSAGE,
@@ -214,13 +213,13 @@ export class TabManager {
 		} catch {}
 	}
 
-	send(action: MessageActionType) {
+	send(action: MessageActionType): void {
 		try {
 			this.channel.postMessage({ action, token: this.token });
 		} catch {}
 	}
 
-	close() {
+	close(): void {
 		if (this.options.leaderElection) {
 			if (this.elector) this.elector.close();
 		}

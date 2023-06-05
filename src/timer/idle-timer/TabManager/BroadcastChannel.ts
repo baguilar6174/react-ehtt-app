@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { timers } from '../utils';
 
 type ChannelsType = {
@@ -44,7 +44,7 @@ export class Polyfill {
 		window.addEventListener('storage', this.onStorage);
 	}
 
-	private onStorage(event: StorageEvent) {
+	private onStorage(event: StorageEvent): void {
 		if (event.storageArea !== window.localStorage) return;
 		if (event.key && event.key.substring(0, this.name.length) !== this.name) return;
 		if (event.newValue === null) return;
@@ -52,7 +52,7 @@ export class Polyfill {
 		this.mc.port2.postMessage(data);
 	}
 
-	public postMessage(message: any) {
+	public postMessage(message: any): void {
 		if (this.closed) throw new Error('InvalidStateError');
 		const value = JSON.stringify(message);
 		const key = `${this.name}:${String(Date.now())}${String(Math.random())}`;
@@ -70,7 +70,7 @@ export class Polyfill {
 		});
 	}
 
-	public close() {
+	public close(): void {
 		if (this.closed) return;
 		this.closed = true;
 		this.mc.port1.close();
@@ -102,11 +102,11 @@ export class Polyfill {
 		this.mc.port1.onmessageerror = value;
 	}
 
-	public addEventListener(event: any, listener: (event: MessageEvent<any>) => void) {
+	public addEventListener(event: any, listener: (event: MessageEvent<any>) => void): void {
 		return this.mc.port1.addEventListener(event, listener);
 	}
 
-	public removeEventListener(event: any, listener: (event: MessageEvent<any>) => void) {
+	public removeEventListener(event: any, listener: (event: MessageEvent<any>) => void): void {
 		return this.mc.port1.removeEventListener(event, listener);
 	}
 

@@ -1,6 +1,5 @@
 /* eslint-disable no-empty */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { timers, sleep, createToken } from '../utils';
 import { MessageActionType } from '../types';
 
@@ -61,7 +60,7 @@ export class LeaderElector {
 
 		let abort = false;
 
-		const handleMessage = (message: MessageEvent<IInternalMessage>) => {
+		const handleMessage = (message: MessageEvent<IInternalMessage>): void => {
 			const { token, action } = message.data;
 			if (token !== this.token) {
 				// Other is applying
@@ -108,7 +107,7 @@ export class LeaderElector {
 
 		return new Promise((resolve) => {
 			// Promise resolution
-			const finish = () => {
+			const finish = (): void => {
 				/**
 				 * istanbul ignore next
 				 *
@@ -136,7 +135,7 @@ export class LeaderElector {
 			this.intervals.push(interval);
 
 			// Try to assume leadership when another leader dies
-			const onClose = (message: MessageEvent<IInternalMessage>) => {
+			const onClose = (message: MessageEvent<IInternalMessage>): void => {
 				const { action } = message.data;
 				if (action === MessageActionType.CLOSE) {
 					this.apply().then(() => {
@@ -158,7 +157,7 @@ export class LeaderElector {
 	private assumeLead(): void {
 		this.isLeader = true;
 
-		const isLeaderListener = (message: MessageEvent<IInternalMessage>) => {
+		const isLeaderListener = (message: MessageEvent<IInternalMessage>): void => {
 			const { action } = message.data;
 			if (action === MessageActionType.APPLY) {
 				this.sendAction(MessageActionType.TELL);

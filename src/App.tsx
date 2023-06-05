@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import './App.scss';
 import { SECOND, TWO, ZERO } from './utils/constants';
 import { parseTimeInMillis } from './utils/utils';
-import worker from './worker-script';
+import { useIsWindowVisible } from './hooks';
 
 export type ActivityBaseInternalContainer = {
 	interval: ReturnType<typeof setTimeout>;
@@ -11,17 +11,16 @@ export type ActivityBaseInternalContainer = {
 };
 
 function App(): JSX.Element {
-	const timerWorker: Worker = useMemo(() => new Worker(worker), []);
-
 	const sessionDuration = parseTimeInMillis('3m');
 	const timeBeforeTimeoutNotification = parseTimeInMillis('30s');
+	const isVisible = useIsWindowVisible();
 
 	const [grace, setGrace] = React.useState<number | null>(null);
 	const refActivity = React.useRef<null | ActivityBaseInternalContainer>(null);
 	const hasToShowExtendSessionModal = Boolean(grace);
+	const [timerInBackground, setTimerInBackground] = React.useState<number>();
 
 	const handleActivityReset = React.useCallback(() => {
-		if (window.Worker) timerWorker.postMessage({ turn: 'on' });
 		if (!refActivity.current) return;
 		const { current } = refActivity;
 		if (current.throttle) {
@@ -39,6 +38,19 @@ function App(): JSX.Element {
 			handleActivityReset();
 		}
 	}, [handleActivityReset]);
+
+	React.useEffect(() => {
+		const doLogoutInBackground = (): void => {
+			console.log('cerrar sesión');
+		};
+		if (!isVisible || !timerInBackground) {
+			setTimerInBackground(new Date().getTime());
+			return;
+		}
+		const diff = new Date().getTime() - timerInBackground;
+		console.log('diff in seconds', Math.floor(diff / Number(SECOND)));
+		if (diff > sessionDuration) doLogoutInBackground();
+	}, [isVisible]);
 
 	React.useEffect(() => {
 		if (refActivity.current) return cleanupEventsWhenUnmounting;
@@ -75,33 +87,15 @@ function App(): JSX.Element {
 		return () => events.forEach((event) => window.removeEventListener(event, handleActivityReset));
 	}, [handleActivityReset, hasToShowExtendSessionModal]);
 
-	const [webWorkerTime, setWebWorkerTime] = useState<number>(sessionDuration);
-
-	useEffect(() => {
-		if (window.Worker) {
-			timerWorker.onmessage = ({ data }): void => {
-				const { time } = data;
-				console.log(time / Number(SECOND));
-				setWebWorkerTime(time);
-			};
-		}
-	}, [timerWorker]);
-
-	/* const resetWebWorkerTimer = (): void => {
-		timerWorker.postMessage({ turn: 'off' });
-		setWebWorkerTime(sessionDuration);
-	}; */
-
 	return (
 		<div className="py-5">
 			<h1>Hello world</h1>
-			{/* {hasToShowExtendSessionModal && (
+			{hasToShowExtendSessionModal && (
 				<div className="p-12">
 					<h4>{`Su sesión va a expirar ${grace}`}</h4>
 				</div>
 			)}
-			{grace && grace <= 1 && <h5 className="mt-5">Su sesión expiró</h5>} */}
-			Time: {webWorkerTime / Number(SECOND)}
+			{grace && grace <= 1 && <h5 className="mt-5">Su sesión expiró</h5>}
 		</div>
 	);
 
@@ -112,10 +106,6 @@ function App(): JSX.Element {
 		clearInterval(refActivity.current.interval);
 		refActivity.current = null;
 		setGrace(null);
-		if (window.Worker) {
-			timerWorker.postMessage({ turn: 'off' });
-			setWebWorkerTime(sessionDuration);
-		}
 	}
 }
 

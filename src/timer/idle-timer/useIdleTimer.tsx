@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useEffect, useRef, useCallback, useMemo } from 'react';
 
 import { TabManager } from './TabManager';
@@ -43,12 +42,12 @@ export function useIdleTimer({
 	events = DEFAULT_EVENTS,
 	timers = undefined,
 	immediateEvents = [],
-	onPresenceChange = () => {},
-	onPrompt = () => {},
-	onIdle = () => {},
-	onActive = () => {},
-	onAction = () => {},
-	onMessage = () => {},
+	onPresenceChange = (): void => {},
+	onPrompt = (): void => {},
+	onIdle = (): void => {},
+	onActive = (): void => {},
+	onAction = (): void => {},
+	onMessage = (): void => {},
 	debounce = 0,
 	throttle = 0,
 	eventsThrottle = 200,
@@ -186,7 +185,7 @@ export function useIdleTimer({
 	}, [onMessage]);
 
 	const callOnAction = useMemo<IEventHandler>(() => {
-		const call = (event: EventType, idleTimer: IIdleTimer) => emitOnAction.current(event, idleTimer);
+		const call = (event: EventType, idleTimer: IIdleTimer): void => emitOnAction.current(event, idleTimer);
 
 		// Create debounced action if applicable
 		if (debounce > 0) {
@@ -252,7 +251,7 @@ export function useIdleTimer({
 	 * Toggles to Idle State
 	 * @private
 	 */
-	const toggleIdle = () => {
+	const toggleIdle = (): void => {
 		destroyTimeout();
 		if (!idle.current) {
 			emitOnIdle.current(undefined, idleTimer);
@@ -277,7 +276,7 @@ export function useIdleTimer({
 	 * @param event Event
 	 * @private
 	 */
-	const toggleActive = (event?: EventType) => {
+	const toggleActive = (event?: EventType): void => {
 		destroyTimeout();
 		if (idle.current || prompted.current) {
 			emitOnActive.current(event, idleTimer);
@@ -787,7 +786,7 @@ export function useIdleTimer({
 		if (timers) setTimers(timers);
 
 		// Add beforeunload listener
-		const beforeunload = () => {
+		const beforeunload = (): void => {
 			if (manager.current) manager.current.close();
 			if (callOnAction.cancel) callOnAction.cancel();
 			destroyTimeout();
@@ -822,16 +821,16 @@ export function useIdleTimer({
 			manager.current = new TabManager({
 				channelName: name,
 				leaderElection,
-				onPrompt: () => {
+				onPrompt: (): void => {
 					togglePrompted();
 				},
-				onIdle: () => {
+				onIdle: (): void => {
 					toggleIdle();
 				},
-				onActive: () => {
+				onActive: (): void => {
 					toggleActive();
 				},
-				onMessage: (data: any) => {
+				onMessage: (data: any): void => {
 					emitOnMessage.current(data, idleTimer);
 				},
 				start,
@@ -914,27 +913,27 @@ export function useIdleTimer({
 		getTotalIdleTime,
 		getActiveTime,
 		getTotalActiveTime,
-		setOnPresenceChange: (fn: IPresenceChangeHandler) => {
+		setOnPresenceChange: (fn: IPresenceChangeHandler): void => {
 			onPresenceChange = fn;
 			emitOnPresenceChange.current = fn;
 		},
-		setOnPrompt: (fn: IEventHandler) => {
+		setOnPrompt: (fn: IEventHandler): void => {
 			onPrompt = fn;
 			emitOnPrompt.current = fn;
 		},
-		setOnIdle: (fn: IEventHandler) => {
+		setOnIdle: (fn: IEventHandler): void => {
 			onIdle = fn;
 			emitOnIdle.current = fn;
 		},
-		setOnActive: (fn: IEventHandler) => {
+		setOnActive: (fn: IEventHandler): void => {
 			onActive = fn;
 			emitOnActive.current = fn;
 		},
-		setOnAction: (fn: IEventHandler) => {
+		setOnAction: (fn: IEventHandler): void => {
 			onAction = fn;
 			emitOnAction.current = fn;
 		},
-		setOnMessage: (fn: IEventHandler) => {
+		setOnMessage: (fn: IEventHandler): void => {
 			onMessage = fn;
 			emitOnMessage.current = fn;
 		}
