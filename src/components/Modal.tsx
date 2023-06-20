@@ -1,3 +1,4 @@
+import { ReactElement } from 'react';
 import { CloseIcon } from './Icons';
 
 type ModalProp = {
@@ -6,7 +7,7 @@ type ModalProp = {
 	toggle: () => void;
 };
 
-export const Modal = (props: ModalProp) => {
+export const Modal = (props: ModalProp): ReactElement | null => {
 	const { toggle, open, children } = props;
 
 	if (!open) return null;
