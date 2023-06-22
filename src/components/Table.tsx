@@ -1,51 +1,24 @@
 import React, { ReactElement, useState } from 'react';
 import { Person } from '../data/mock/employees';
+import { useSortableData } from '../hooks';
 
 interface TableProps {
 	data: Person[];
 }
 
-export enum Direction {
-	ascending = 'ascending',
-	descending = 'descending'
-}
-
-type configType<T> = {
-	direction: Direction;
-	key: keyof T;
-};
-
 const excludeColumns: (keyof Person)[] = [];
 const headers: Array<keyof Person> = ['companyLogo', 'name', 'company', 'category', 'happinessLevel'];
 
 export const Table: React.FC<TableProps> = ({ data }: TableProps): ReactElement => {
-	const [sortConfig, setSortConfig] = React.useState<configType<Person> | undefined>();
+	const { sortedItems, requestSort } = useSortableData(data, { direction: 'asc', key: 'name' });
 	const [sortedData, setSortedData] = useState<Person[]>(data);
 	const [searchText, setSearchText] = useState<string>('');
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const itemsPerPage = 5;
 
-	// Function to handle sorting by a specific column
 	const handleSort = (key: keyof Person): void => {
-		let direction: Direction = Direction.ascending;
-		if (sortConfig && sortConfig.key === key && sortConfig.direction === Direction.ascending) {
-			direction = Direction.descending;
-		}
-		setSortConfig({ key, direction });
-
-		const sorted = [...data];
-		if (sortConfig !== undefined) {
-			sorted.sort((a, b): 1 | -1 | 0 => {
-				if (a[sortConfig.key] < b[sortConfig.key]) {
-					return sortConfig.direction === Direction.ascending ? -1 : 1;
-				}
-				if (a[sortConfig.key] > b[sortConfig.key]) {
-					return sortConfig.direction === Direction.ascending ? 1 : -1;
-				}
-				return 0;
-			});
-		}
-		setSortedData(sorted);
+		requestSort(key);
+		setSortedData(sortedItems);
 	};
 
 	/**

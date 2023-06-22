@@ -1,12 +1,7 @@
 import React from 'react';
 
-export enum Direction {
-	ascending = 'ascending',
-	descending = 'descending'
-}
-
-type configType<T> = {
-	direction: Direction;
+export type configType<T> = {
+	direction: 'asc' | 'desc';
 	key: keyof T;
 };
 
@@ -14,7 +9,7 @@ export const useSortableData = <T>(
 	items: T[],
 	config?: configType<T>
 ): {
-	items: T[];
+	sortedItems: T[];
 	requestSort: (key: keyof T) => void;
 	sortConfig: configType<T> | undefined;
 } => {
@@ -22,13 +17,13 @@ export const useSortableData = <T>(
 
 	const sortedItems = React.useMemo((): T[] => {
 		const sortableItems = [...items];
-		if (sortConfig !== undefined) {
+		if (sortConfig) {
 			sortableItems.sort((a, b): 1 | -1 | 0 => {
 				if (a[sortConfig.key] < b[sortConfig.key]) {
-					return sortConfig.direction === Direction.ascending ? -1 : 1;
+					return sortConfig.direction === 'asc' ? -1 : 1;
 				}
 				if (a[sortConfig.key] > b[sortConfig.key]) {
-					return sortConfig.direction === Direction.ascending ? 1 : -1;
+					return sortConfig.direction === 'asc' ? 1 : -1;
 				}
 				return 0;
 			});
@@ -37,12 +32,12 @@ export const useSortableData = <T>(
 	}, [items, sortConfig]);
 
 	const requestSort = <K extends keyof T>(key: K): void => {
-		let direction: Direction = Direction.ascending;
-		if (sortConfig && sortConfig.key === key && sortConfig.direction === Direction.ascending) {
-			direction = Direction.descending;
+		let direction: 'asc' | 'desc' = 'asc';
+		if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+			direction = 'desc';
 		}
 		setSortConfig({ key, direction });
 	};
 
-	return { items: sortedItems, requestSort, sortConfig };
+	return { sortedItems, requestSort, sortConfig };
 };
