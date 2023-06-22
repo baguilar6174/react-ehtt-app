@@ -6,41 +6,41 @@ interface TableProps {
 	data: Person[];
 }
 
-const excludeColumns: (keyof Person)[] = [];
 const headers: Array<keyof Person> = ['companyLogo', 'name', 'company', 'category', 'happinessLevel'];
 
 export const Table: React.FC<TableProps> = ({ data }: TableProps): ReactElement => {
-	const { sortedItems, requestSort } = useSortableData(data, { direction: 'asc', key: 'name' });
+	const { sortedItems, requestSort } = useSortableData(data);
 	const [sortedData, setSortedData] = useState<Person[]>(data);
 	const [searchText, setSearchText] = useState<string>('');
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const itemsPerPage = 5;
 
+	// Function to handle sorting by a specific column
 	const handleSort = (key: keyof Person): void => {
 		requestSort(key);
 		setSortedData(sortedItems);
 	};
 
-	/**
-	 * Busca en la lista en función de todas las propiedades
-	 * @param search Search param
-	 */
-	const handleSearch = (search: string): void => {
-		const filtered = data.filter((item): boolean | Person => {
-			if (search.toLowerCase().trim() === '') return item;
-			return Object.keys(item).some((key): boolean | undefined =>
-				excludeColumns.includes(key as keyof Person)
-					? false
-					: item[key as keyof Person]?.toString().toLowerCase().includes(search)
+	// Function to handle searching
+	const handleSearch = (text: string): void => {
+		const query = text.toLowerCase();
+		const filtered = data.filter((person) => {
+			return (
+				person.name.toLowerCase().includes(query) ||
+				person.category.toLowerCase().includes(query) ||
+				person.company.toLowerCase().includes(query) ||
+				person.happinessLevel.toString().toLowerCase().includes(query)
 			);
 		});
-		setSearchText(search);
+		setSearchText(text);
 		setSortedData(filtered);
 		setCurrentPage(1);
 	};
 
 	// Function to handle pagination
-	const handlePageChange = (pageNumber: number): void => setCurrentPage(pageNumber);
+	const handlePageChange = (pageNumber: number): void => {
+		setCurrentPage(pageNumber);
+	};
 
 	// Calculate the range of items to be displayed on the current page
 	const startIndex = (currentPage - 1) * itemsPerPage;
@@ -50,7 +50,7 @@ export const Table: React.FC<TableProps> = ({ data }: TableProps): ReactElement 
 	const paginatedData = sortedData.slice(startIndex, endIndex);
 
 	return (
-		<div>
+		<>
 			{/* Add sorting and searching controls */}
 			<div>
 				<input
@@ -100,16 +100,18 @@ export const Table: React.FC<TableProps> = ({ data }: TableProps): ReactElement 
 					))}
 				</tbody>
 			</table>
-
 			{/* Pagination */}
-			<div>
-				{/* Generate page numbers */}
+			<div className="flex justify-center mt-8">
 				{Array.from({ length: Math.ceil(sortedData.length / itemsPerPage) }, (_, index) => (
-					<button className="p-4" key={index} onClick={(): void => handlePageChange(index + 1)}>
+					<button
+						className={`p-4 ${index === currentPage - 1 ? 'bg-gray-400' : 'border hover:bg-gray-200'}`}
+						key={index}
+						onClick={(): void => handlePageChange(index + 1)}
+					>
 						{index + 1}
 					</button>
 				))}
 			</div>
-		</div>
+		</>
 	);
 };

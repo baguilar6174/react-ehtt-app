@@ -1,7 +1,7 @@
 import React from 'react';
 
 export type configType<T> = {
-	direction: 'asc' | 'desc';
+	direction?: 'asc' | 'desc';
 	key: keyof T;
 };
 

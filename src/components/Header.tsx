@@ -29,7 +29,7 @@ export const Header = (): ReactElement => {
 					Favorites
 				</button>
 			</nav>
-			<Modal toggle={toggleModal} open={isModalOpen}>
+			<Modal setShowModal={setIsModalOpen} showModal={isModalOpen}>
 				<p>
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis vitae eaque unde ut. Porro, nobis, veniam
 					recusandae ut id fuga esse molestias non, incidunt sed nisi quisquam accusamus eos atque reprehenderit.

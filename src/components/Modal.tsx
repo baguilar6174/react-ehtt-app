@@ -3,20 +3,20 @@ import { CloseIcon } from './Icons';
 
 type ModalProp = {
 	children: React.ReactNode;
-	open: boolean;
-	toggle: () => void;
+	showModal: boolean;
+	setShowModal: (prev: boolean) => void;
 };
 
 export const Modal = (props: ModalProp): ReactElement | null => {
-	const { toggle, open, children } = props;
+	const { setShowModal, showModal, children } = props;
 
-	if (!open) return null;
+	if (!showModal) return null;
 
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center">
 			<div className="w-[50vw]">
 				<div className="bg-white p-10 rounded-md relative">
-					<button onClick={toggle} className="absolute top-3 right-3">
+					<button onClick={handleClose} className="absolute top-3 right-3">
 						<CloseIcon className="!w-8" />
 					</button>
 					<h2 className="text-2xl mb-5">Modal title</h2>
@@ -25,4 +25,8 @@ export const Modal = (props: ModalProp): ReactElement | null => {
 			</div>
 		</div>
 	);
+
+	function handleClose(): void {
+		setShowModal(false);
+	}
 };
