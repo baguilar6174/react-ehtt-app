@@ -1,7 +1,11 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useContext } from 'react';
 import { Modal } from './';
+import { FavoritesContext } from '../context';
+import { Table } from './Table';
 
 export const Header = (): ReactElement => {
+	const { favorites } = useContext(FavoritesContext);
+
 	const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
 
 	return (
@@ -29,14 +33,8 @@ export const Header = (): ReactElement => {
 					Favorites
 				</button>
 			</nav>
-			<Modal setShowModal={setIsModalOpen} showModal={isModalOpen}>
-				<p>
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis vitae eaque unde ut. Porro, nobis, veniam
-					recusandae ut id fuga esse molestias non, incidunt sed nisi quisquam accusamus eos atque reprehenderit.
-					Dolorum, incidunt perspiciatis quibusdam voluptatem atque ipsum recusandae ullam quasi ducimus cumque
-					voluptatibus. Obcaecati tempore corporis rerum iure voluptates iste enim magni laborum molestiae, reiciendis
-					quibusdam volu
-				</p>
+			<Modal setShowModal={setIsModalOpen} showModal={isModalOpen} title="Favorites tracking">
+				<Table data={favorites} itemsPerPage={5} />
 			</Modal>
 		</>
 	);

@@ -5,10 +5,11 @@ type ModalProp = {
 	children: React.ReactNode;
 	showModal: boolean;
 	setShowModal: (prev: boolean) => void;
+	title?: string;
 };
 
 export const Modal = (props: ModalProp): ReactElement | null => {
-	const { setShowModal, showModal, children } = props;
+	const { setShowModal, showModal, children, title } = props;
 
 	if (!showModal) return null;
 
@@ -19,7 +20,7 @@ export const Modal = (props: ModalProp): ReactElement | null => {
 					<button onClick={handleClose} className="absolute top-3 right-3">
 						<CloseIcon className="!w-8" />
 					</button>
-					<h2 className="text-2xl mb-5">Modal title</h2>
+					{title && <h2 className="text-2xl mb-5">{title}</h2>}
 					{children}
 				</div>
 			</div>

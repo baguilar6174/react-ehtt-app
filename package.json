@@ -18,12 +18,15 @@
 		"format": "prettier --write src/**/*.{js,jsx,ts,tsx,scss,md,json} --config ./.prettierrc"
 	},
 	"dependencies": {
+		"notistack": "^3.0.1",
 		"react": "^18.2.0",
-		"react-dom": "^18.2.0"
+		"react-dom": "^18.2.0",
+		"uuid": "^9.0.0"
 	},
 	"devDependencies": {
 		"@types/react": "^18.0.28",
 		"@types/react-dom": "^18.0.11",
+		"@types/uuid": "^9.0.2",
 		"@typescript-eslint/eslint-plugin": "^5.59.7",
 		"@typescript-eslint/parser": "^5.59.7",
 		"@vitejs/plugin-react-swc": "^3.0.0",

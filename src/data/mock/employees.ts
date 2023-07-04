@@ -1,9 +1,12 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export enum Category {
 	EMPLOYEE = 'EMPLOYEE',
 	MANAGER = 'MANAGER'
 }
 
 export interface Person {
+	id: string;
 	name: string;
 	category: Category;
 	company: string;
@@ -13,6 +16,7 @@ export interface Person {
 
 export const DATA: Person[] = [
 	{
+		id: uuidv4(),
 		name: 'Kerwinn Yerlett',
 		category: Category.EMPLOYEE,
 		company: 'Flashpoint',
@@ -20,6 +24,7 @@ export const DATA: Person[] = [
 		companyLogo: '/apple.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Donnie Goade',
 		category: Category.EMPLOYEE,
 		company: 'Yakijo',
@@ -27,6 +32,7 @@ export const DATA: Person[] = [
 		companyLogo: '/apple.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Christean Zanolli',
 		category: Category.MANAGER,
 		company: 'Mudo',
@@ -34,6 +40,7 @@ export const DATA: Person[] = [
 		companyLogo: '/nodejs.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Oliviero Gummie',
 		category: Category.MANAGER,
 		company: 'Voomm',
@@ -41,6 +48,7 @@ export const DATA: Person[] = [
 		companyLogo: '/vite.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Shannon Lattos',
 		category: Category.MANAGER,
 		company: 'Lazzy',
@@ -48,6 +56,7 @@ export const DATA: Person[] = [
 		companyLogo: '/firefox.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Carolus Czaja',
 		category: Category.MANAGER,
 		company: 'Photobug',
@@ -55,6 +64,7 @@ export const DATA: Person[] = [
 		companyLogo: '/zoom.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Babbie Bridie',
 		category: Category.MANAGER,
 		company: 'Edgeblab',
@@ -62,6 +72,7 @@ export const DATA: Person[] = [
 		companyLogo: '/google.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Ruprecht Greste',
 		category: Category.MANAGER,
 		company: 'Divavu',
@@ -69,6 +80,7 @@ export const DATA: Person[] = [
 		companyLogo: '/notion.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Devonna Lilleyman',
 		category: Category.EMPLOYEE,
 		company: 'Eazzy',
@@ -76,6 +88,7 @@ export const DATA: Person[] = [
 		companyLogo: '/firefox.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Libbi Hankins',
 		category: Category.MANAGER,
 		company: 'Zoomzone',
@@ -83,6 +96,7 @@ export const DATA: Person[] = [
 		companyLogo: '/google.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Felicity Falkous',
 		category: Category.MANAGER,
 		company: 'Thoughtstorm',
@@ -90,6 +104,7 @@ export const DATA: Person[] = [
 		companyLogo: '/zoom.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Wallis Ortsmann',
 		category: Category.EMPLOYEE,
 		company: 'Quinu',
@@ -97,6 +112,7 @@ export const DATA: Person[] = [
 		companyLogo: '/notion.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Loella Margerrison',
 		category: Category.MANAGER,
 		company: 'Twitterworks',
@@ -104,6 +120,7 @@ export const DATA: Person[] = [
 		companyLogo: '/firefox.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Gregg Petrusch',
 		category: Category.EMPLOYEE,
 		company: 'Kanoodle',
@@ -111,6 +128,7 @@ export const DATA: Person[] = [
 		companyLogo: '/apple.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Mariann Langsdon',
 		category: Category.EMPLOYEE,
 		company: 'Voolith',
@@ -118,6 +136,7 @@ export const DATA: Person[] = [
 		companyLogo: '/nodejs.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Tara Rennie',
 		category: Category.MANAGER,
 		company: 'Thoughtworks',
@@ -125,6 +144,7 @@ export const DATA: Person[] = [
 		companyLogo: '/apple.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Elbertina Dahler',
 		category: Category.MANAGER,
 		company: 'Shuffledrive',
@@ -132,6 +152,7 @@ export const DATA: Person[] = [
 		companyLogo: '/firefox.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Paige Luberto',
 		category: Category.EMPLOYEE,
 		company: 'Vidoo',
@@ -139,6 +160,7 @@ export const DATA: Person[] = [
 		companyLogo: '/apple.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Bayard Gentery',
 		category: Category.EMPLOYEE,
 		company: 'Twinte',
@@ -146,6 +168,7 @@ export const DATA: Person[] = [
 		companyLogo: '/firefox.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Wilhelmina Sillars',
 		category: Category.MANAGER,
 		company: 'Skinix',
@@ -153,6 +176,7 @@ export const DATA: Person[] = [
 		companyLogo: '/vite.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Winna Sepey',
 		category: Category.MANAGER,
 		company: 'Skinte',
@@ -160,6 +184,7 @@ export const DATA: Person[] = [
 		companyLogo: '/apple.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Donalt Chanter',
 		category: Category.MANAGER,
 		company: 'Mita',
@@ -167,6 +192,7 @@ export const DATA: Person[] = [
 		companyLogo: '/firefox.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Chrysa Mundow',
 		category: Category.MANAGER,
 		company: 'Youtags',
@@ -174,6 +200,7 @@ export const DATA: Person[] = [
 		companyLogo: '/zoom.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Pammy Basile',
 		category: Category.EMPLOYEE,
 		company: 'Kwideo',
@@ -181,6 +208,7 @@ export const DATA: Person[] = [
 		companyLogo: '/google.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Drud Banfill',
 		category: Category.MANAGER,
 		company: 'Youbridge',
@@ -188,6 +216,7 @@ export const DATA: Person[] = [
 		companyLogo: '/vite.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Dolores Eubank',
 		category: Category.MANAGER,
 		company: 'Babblestorm',
@@ -195,6 +224,7 @@ export const DATA: Person[] = [
 		companyLogo: '/firefox.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Andrus Thurlborn',
 		category: Category.MANAGER,
 		company: 'Demizz',
@@ -202,6 +232,7 @@ export const DATA: Person[] = [
 		companyLogo: '/vite.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Pierrette Baddow',
 		category: Category.EMPLOYEE,
 		company: 'Dabtype',
@@ -209,6 +240,7 @@ export const DATA: Person[] = [
 		companyLogo: '/nodejs.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Gavan Kunc',
 		category: Category.EMPLOYEE,
 		company: 'Jabbersphere',
@@ -216,6 +248,7 @@ export const DATA: Person[] = [
 		companyLogo: '/notion.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Stu Culcheth',
 		category: Category.EMPLOYEE,
 		company: 'Fadeo',
@@ -223,6 +256,7 @@ export const DATA: Person[] = [
 		companyLogo: '/firefox.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Zorine Goldsby',
 		category: Category.MANAGER,
 		company: 'Riffpath',
@@ -230,6 +264,7 @@ export const DATA: Person[] = [
 		companyLogo: '/vite.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Timmie Rickersey',
 		category: Category.EMPLOYEE,
 		company: 'Chatterpoint',
@@ -237,6 +272,7 @@ export const DATA: Person[] = [
 		companyLogo: '/firefox.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Perry Buncher',
 		category: Category.MANAGER,
 		company: 'Bluezoom',
@@ -244,6 +280,7 @@ export const DATA: Person[] = [
 		companyLogo: '/zoom.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Marita Claye',
 		category: Category.MANAGER,
 		company: 'Fivebridge',
@@ -251,6 +288,7 @@ export const DATA: Person[] = [
 		companyLogo: '/vite.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Susanne Durram',
 		category: Category.MANAGER,
 		company: 'Zooveo',
@@ -258,6 +296,7 @@ export const DATA: Person[] = [
 		companyLogo: '/apple.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Carlie Whitechurch',
 		category: Category.MANAGER,
 		company: 'Zoovu',
@@ -265,6 +304,7 @@ export const DATA: Person[] = [
 		companyLogo: '/apple.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Merill Waddell',
 		category: Category.MANAGER,
 		company: 'Zooxo',
@@ -272,6 +312,7 @@ export const DATA: Person[] = [
 		companyLogo: '/vite.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Sigmund Dawidowsky',
 		category: Category.MANAGER,
 		company: 'Miboo',
@@ -279,6 +320,7 @@ export const DATA: Person[] = [
 		companyLogo: '/firefox.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Marissa Christene',
 		category: Category.MANAGER,
 		company: 'LiveZ',
@@ -286,6 +328,7 @@ export const DATA: Person[] = [
 		companyLogo: '/firefox.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Torin Ledamun',
 		category: Category.MANAGER,
 		company: 'Zooveo',
@@ -293,6 +336,7 @@ export const DATA: Person[] = [
 		companyLogo: '/vite.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Davidson Dunniom',
 		category: Category.EMPLOYEE,
 		company: 'Tagopia',
@@ -300,6 +344,7 @@ export const DATA: Person[] = [
 		companyLogo: '/zoom.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Frederico Sorrell',
 		category: Category.EMPLOYEE,
 		company: 'Cogidoo',
@@ -307,6 +352,7 @@ export const DATA: Person[] = [
 		companyLogo: '/notion.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Paulie Kenwell',
 		category: Category.EMPLOYEE,
 		company: 'Mynte',
@@ -314,6 +360,7 @@ export const DATA: Person[] = [
 		companyLogo: '/nodejs.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Kellyann Ollivierre',
 		category: Category.EMPLOYEE,
 		company: 'Katz',
@@ -321,6 +368,7 @@ export const DATA: Person[] = [
 		companyLogo: '/nodejs.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Evvie Malins',
 		category: Category.EMPLOYEE,
 		company: 'Riffpedia',
@@ -328,6 +376,7 @@ export const DATA: Person[] = [
 		companyLogo: '/notion.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Tomas Kinghorne',
 		category: Category.MANAGER,
 		company: 'Vinte',
@@ -335,6 +384,7 @@ export const DATA: Person[] = [
 		companyLogo: '/notion.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Thoma Petrol',
 		category: Category.MANAGER,
 		company: 'Photobean',
@@ -342,6 +392,7 @@ export const DATA: Person[] = [
 		companyLogo: '/notion.svg'
 	},
 	{
+		id: uuidv4(),
 		name: 'Gay Gallihaulk',
 		category: Category.MANAGER,
 		company: 'Browsecat',

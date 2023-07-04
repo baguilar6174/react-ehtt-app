@@ -1,5 +1,3 @@
-import React from 'react';
-
 import './App.scss';
 import { DATA } from './data/mock/employees';
 import { Header } from './components';
